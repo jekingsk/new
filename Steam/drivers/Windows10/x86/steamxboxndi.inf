@@ -1,0 +1,43 @@
+[version]
+Signature       = "$Windows NT$"
+Class           = NetService
+ClassGUID       = {4D36E974-E325-11CE-BFC1-08002BE10318}
+CatalogFile     = steamxboxndi.cat
+Provider        = %ProviderString%
+DriverVer = 11/07/2022,1.0.0.13
+PnpLockdown     = 1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTx86,NTamd64
+
+[Standard.NTx86]
+%NdisLwf_Desc%=Install, steamxboxndi
+
+[Standard.NTamd64]
+%NdisLwf_Desc%=Install, steamxboxndi
+
+;-------------------------------------------------------------------------
+; Installation Section
+;-------------------------------------------------------------------------
+[Install]
+AddReg=Inst_Ndi
+Characteristics=0x40000 ; NCF_LW_FILTER
+NetCfgInstanceId="{de3ea451-be98-4353-a0ef-81ee5ed808ee}"
+
+[Inst_Ndi]
+HKR, Ndi,Service,,"steamxbox"
+HKR, Ndi,CoServices,0x00010000,"steamxbox"
+HKR, Ndi,HelpText,,%NdisLwf_HelpText%
+HKR, Ndi,FilterClass,,scheduler
+HKR, Ndi,FilterType,0x00010001,2 ; Modifying filter
+HKR, Ndi\Interfaces,UpperRange,,"noupper"
+HKR, Ndi\Interfaces,LowerRange,,"nolower"
+HKR, Ndi\Interfaces, FilterMediaTypes,,"xboxwirelessinput"
+HKR, Ndi,FilterRunType,0x00010001, 2
+
+[Strings]
+ProviderString = "Valve Corporation"
+ManufacturerName = "Valve Corporation"
+NdisLwf_Desc = "Steam Xbox Controller Enhanced Features Driver"
+NdisLwf_HelpText = "Steam Xbox Controller Enhanced Features Driver"
+

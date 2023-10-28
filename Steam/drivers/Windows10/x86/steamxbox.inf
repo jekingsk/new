@@ -1,0 +1,87 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%ManufacturerName%
+CatalogFile=steamxbox.cat
+DriverVer = 11/07/2022,1.0.0.13
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+steamxbox_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+steamxbox.sys  = 1,,
+;
+
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTx86
+
+[Standard.NTx86]
+%steamxbox.DeviceDesc%=steamxbox_Device, root\steamxbox
+
+[steamxbox_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+steamxbox.sys
+
+[steamxbox_Device.NT.HW]
+AddReg=steamxbox_AddReg
+
+[steamxbox_AddReg]
+; By default, USBDevice class uses iProduct descriptor to name the device in
+; Device Manager on Windows 8 and higher.
+; Uncomment for this device to use %DeviceName% on Windows 8 and higher:
+;HKR,,FriendlyName,,%steamxbox.DeviceDesc%
+
+;-------------- Service installation
+[steamxbox_Device.NT.Services]
+AddService = steamxbox,%SPSVCINST_ASSOCSERVICE%, steamxbox_Service_Inst
+
+; -------------- steamxbox driver install sections
+[steamxbox_Service_Inst]
+DisplayName    = %steamxbox.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 1               ; SERVICE_SYSTEM_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\steamxbox.sys
+
+;
+;--- steamxbox_Device Coinstaller installation ------
+;
+
+[steamxbox_Device.NT.CoInstallers]
+AddReg=steamxbox_Device_CoInstaller_AddReg
+CopyFiles=steamxbox_Device_CoInstaller_CopyFiles
+
+[steamxbox_Device_CoInstaller_AddReg]
+;
+
+
+[steamxbox_Device_CoInstaller_CopyFiles]
+;
+
+
+[steamxbox_Device.NT.Wdf]
+KmdfService =  steamxbox, steamxbox_wdfsect
+[steamxbox_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="Valve Corporation"
+DiskName = "Steam Xbox Controller Enhanced Features Driver Installation Disk"
+steamxbox.DeviceDesc = "Steam Xbox Controller Enhanced Features Driver"
+steamxbox.SVCDESC = "Steam Xbox Controller Enhanced Features Driver"
+REG_MULTI_SZ = 0x00010000
+
